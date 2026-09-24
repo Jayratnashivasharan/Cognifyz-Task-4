@@ -1,0 +1,538 @@
+/* =====================================================================
+   Task 4 - Complex Form Validation and Dynamic DOM Manipulation
+   Custom stylesheet (loaded after Bootstrap so it can override it)
+
+   Table of contents
+   1.  CSS variables and base styles
+   2.  Navbar and route-change progress bar
+   3.  Buttons, links, shared card style
+   4.  Hero (Home view)
+   5.  Sections
+   6.  Client-side routing: view show/hide + transition
+   7.  Registration form: password strength meter + rule checklist
+   8.  Users dashboard: cards, toolbar, empty state
+   9.  Footer
+   10. Responsive tweaks
+   11. Accessibility: reduced motion
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   1. CSS VARIABLES AND BASE STYLES
+   --------------------------------------------------------------------- */
+:root {
+  --primary-color: #0d6efd;
+  --secondary-color: #6610f2;
+  --dark-color: #111827;
+  --light-color: #f8f9fa;
+
+  --text-color: #374151;
+  --muted-color: #4b5563;
+  --gradient-main: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --shadow-sm: 0 4px 14px rgba(17, 24, 39, 0.08);
+  --shadow-lg: 0 18px 40px rgba(17, 24, 39, 0.18);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --nav-height: 72px;
+}
+
+html {
+  scroll-padding-top: var(--nav-height);
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--text-color);
+  line-height: 1.7;
+  background-color: #ffffff;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+:focus-visible {
+  outline: 3px solid var(--primary-color);
+  outline-offset: 3px;
+}
+
+.hero :focus-visible,
+.custom-navbar :focus-visible,
+.site-footer :focus-visible {
+  outline-color: #ffd166;
+}
+
+.skip-link:focus {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 2000;
+  padding: 0.6rem 1rem;
+  background: #ffffff;
+  color: var(--dark-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+}
+
+.text-muted-custom { color: var(--muted-color); }
+
+.text-gradient {
+  background: linear-gradient(90deg, #8ec5ff, #c4b5fd);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.min-w-0 { min-width: 0; }
+
+code {
+  background: #eef2ff;
+  padding: 0.1rem 0.4rem;
+  border-radius: 0.35rem;
+  color: #4338ca;
+}
+
+
+/* ---------------------------------------------------------------------
+   2. NAVBAR + ROUTE PROGRESS BAR
+   --------------------------------------------------------------------- */
+.custom-navbar {
+  min-height: var(--nav-height);
+  background-color: rgba(17, 24, 39, 0.96);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.brand-mark {
+  display: inline-block;
+  padding: 0.1rem 0.45rem;
+  margin-right: 0.25rem;
+  border-radius: 0.4rem;
+  background: var(--gradient-main);
+  font-family: Consolas, Menlo, monospace;
+  font-size: 0.9em;
+  color: #ffffff;
+}
+
+.custom-navbar .nav-link {
+  position: relative;
+  padding: 0.6rem 1rem;
+  color: rgba(255, 255, 255, 0.82);
+  transition: color 0.3s ease;
+}
+
+.custom-navbar .nav-link::after {
+  content: "";
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  bottom: 0.2rem;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #8ec5ff, #c4b5fd);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.3s ease;
+}
+
+.custom-navbar .nav-link:hover,
+.custom-navbar .nav-link:focus-visible,
+.custom-navbar .nav-link.active {
+  color: #ffffff;
+}
+
+.custom-navbar .nav-link:hover::after,
+.custom-navbar .nav-link.active::after {
+  transform: scaleX(1);
+}
+
+/* A thin bar under the navbar that "runs" briefly on every route change,
+   giving client-side navigation a small sense of motion. */
+.route-progress {
+  position: fixed;
+  top: var(--nav-height);
+  left: 0;
+  width: 100%;
+  height: 3px;
+  z-index: 1040;
+  pointer-events: none;
+}
+
+.route-progress.run::before {
+  content: "";
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: var(--gradient-main);
+  animation: routebar 0.5s ease-out forwards;
+}
+
+@keyframes routebar {
+  0% { width: 0%; opacity: 1; }
+  70% { width: 100%; opacity: 1; }
+  100% { width: 100%; opacity: 0; }
+}
+
+
+/* ---------------------------------------------------------------------
+   3. BUTTONS, LINKS, SHARED CARD STYLE
+   --------------------------------------------------------------------- */
+.btn {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease,
+    color 0.3s ease, border-color 0.3s ease, filter 0.3s ease;
+}
+
+.btn-lift:hover,
+.btn-lift:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(17, 24, 39, 0.25);
+}
+
+.btn-gradient {
+  background-image: var(--gradient-main);
+  border: 0;
+  color: #ffffff;
+}
+
+.btn-gradient:hover,
+.btn-gradient:focus-visible {
+  color: #ffffff;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(102, 16, 242, 0.4);
+  filter: brightness(1.1);
+}
+
+.btn-icon {
+  width: 2.1rem;
+  height: 2.1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 50%;
+}
+
+.card-lift {
+  border: 0;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-lift:hover,
+.card-lift:focus-within {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+}
+
+.icon-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: var(--gradient-main);
+  color: #ffffff;
+  font-size: 1.3rem;
+  box-shadow: 0 6px 14px rgba(13, 110, 253, 0.3);
+}
+
+.icon-circle-lg {
+  width: 4rem;
+  height: 4rem;
+  font-size: 1.8rem;
+}
+
+
+/* ---------------------------------------------------------------------
+   4. HERO (Home view)
+   --------------------------------------------------------------------- */
+.hero {
+  position: relative;
+  padding: calc(var(--nav-height) + 3rem) 0 4rem;
+  overflow: hidden;
+  color: #ffffff;
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(135deg, #0b1020 0%, var(--dark-color) 45%, #2a1466 100%);
+  background-size: 28px 28px, cover;
+}
+
+.hero::before,
+.hero::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.hero::before { top: -10%; left: -8%; width: 20rem; height: 20rem; background: var(--primary-color); }
+.hero::after { right: -8%; bottom: -12%; width: 22rem; height: 22rem; background: var(--secondary-color); }
+
+.hero-content { position: relative; z-index: 1; }
+
+.hero-greeting {
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  color: #c7d2fe;
+}
+
+.hero-title {
+  margin-bottom: 1rem;
+  font-size: clamp(1.9rem, 6vw, 3rem);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.hero-text {
+  max-width: 40rem;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+  color: #d1d5db;
+}
+
+
+/* ---------------------------------------------------------------------
+   5. SECTIONS
+   --------------------------------------------------------------------- */
+.section { padding: 4rem 0; }
+.section-alt { background-color: var(--light-color); }
+
+.view-section:first-child {
+  padding-top: calc(var(--nav-height) + 2.5rem);
+}
+
+.section-title {
+  position: relative;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.9rem;
+  text-align: center;
+  font-size: clamp(1.6rem, 4.5vw, 2.25rem);
+  font-weight: 800;
+  color: var(--dark-color);
+}
+
+.section-title::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 70px;
+  height: 4px;
+  border-radius: 4px;
+  background: var(--gradient-main);
+  transform: translateX(-50%);
+}
+
+.section-subtitle {
+  max-width: 42rem;
+  margin: 0 auto 3rem;
+  text-align: center;
+  color: var(--muted-color);
+}
+
+.about-copy h2 { color: var(--dark-color); }
+
+
+/* ---------------------------------------------------------------------
+   6. CLIENT-SIDE ROUTING: view show / hide + transition
+   router.js toggles ".active-view" on the section matching the route.
+   --------------------------------------------------------------------- */
+.app-view {
+  display: none;
+}
+
+.app-view.active-view {
+  display: block;
+  animation: viewIn 0.35s var(--ease) both;
+}
+
+@keyframes viewIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ---------------------------------------------------------------------
+   7. REGISTRATION FORM
+   --------------------------------------------------------------------- */
+.contact-card {
+  border: 0;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+}
+
+.contact-card .form-control,
+.contact-card .form-select {
+  padding: 0.65rem 0.9rem;
+  border-radius: var(--radius-md);
+}
+
+.contact-card .form-control:focus,
+.contact-card .form-select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.2);
+}
+
+.contact-card .form-label {
+  font-weight: 600;
+  color: var(--dark-color);
+}
+
+/* Strength meter: 4 flat segments that fill in and change colour */
+.strength-meter {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.strength-seg {
+  flex: 1;
+  height: 0.4rem;
+  border-radius: 999px;
+  background-color: #e5e7eb;
+  transition: background-color 0.3s ease;
+}
+
+.strength-seg.seg-1 { background-color: #dc3545; }
+.strength-seg.seg-2 { background-color: #fd7e14; }
+.strength-seg.seg-3 { background-color: #ffc107; }
+.strength-seg.seg-4 { background-color: #198754; }
+
+.password-rules li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.15rem 0;
+  font-size: 0.9rem;
+  color: var(--muted-color);
+  transition: color 0.3s ease;
+}
+
+.password-rules li i {
+  color: #adb5bd;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.password-rules li.rule-met {
+  color: #198754;
+}
+
+.password-rules li.rule-met i {
+  color: #198754;
+  transform: scale(1.1);
+}
+
+
+/* ---------------------------------------------------------------------
+   8. USERS DASHBOARD
+   --------------------------------------------------------------------- */
+.dashboard-toolbar .form-label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--dark-color);
+}
+
+.user-card { border-radius: var(--radius-lg); }
+
+.user-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: var(--gradient-main);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.user-details li {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  color: var(--muted-color);
+  padding: 0.15rem 0;
+}
+
+.user-bio {
+  resize: vertical;
+}
+
+.empty-state {
+  padding: 3rem 1rem;
+  border: 1px dashed #cbd5e1;
+  border-radius: var(--radius-lg);
+  background: #ffffff;
+}
+
+.empty-icon {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-size: 2.5rem;
+  color: #94a3b8;
+}
+
+
+/* ---------------------------------------------------------------------
+   9. FOOTER
+   --------------------------------------------------------------------- */
+.site-footer {
+  padding: 2.25rem 0;
+  background: var(--dark-color);
+  color: #ffffff;
+}
+
+.footer-muted { color: #cbd5e1; }
+
+.footer-link {
+  color: #e5e7eb;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-link:hover,
+.footer-link:focus-visible {
+  color: #8ec5ff;
+}
+
+.footer-divider {
+  margin: 1.5rem 0 1rem;
+  border-color: rgba(255, 255, 255, 0.25);
+  opacity: 1;
+}
+
+
+/* ---------------------------------------------------------------------
+   10. RESPONSIVE TWEAKS
+   --------------------------------------------------------------------- */
+@media (max-width: 575.98px) {
+  .section { padding: 3rem 0; }
+  .view-section:first-child { padding-top: calc(var(--nav-height) + 1.5rem); }
+}
+
+@media (min-width: 992px) {
+  .section { padding: 5rem 0; }
+}
+
+
+/* ---------------------------------------------------------------------
+   11. ACCESSIBILITY: reduced motion
+   --------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

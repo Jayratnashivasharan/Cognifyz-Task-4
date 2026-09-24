@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Task 4 - Complex Form Validation and Dynamic DOM Manipulation. A client-side registration and user dashboard app with password strength checking, live validation, dynamic DOM updates and hash-based client-side routing.">
+  <meta name="theme-color" content="#111827">
+  <title>Task 4 | Complex Form Validation and Dynamic DOM Manipulation</title>
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230d6efd'/%3E%3Ctext x='32' y='42' font-size='26' font-family='monospace' font-weight='700' text-anchor='middle' fill='white'%3E4%3C/text%3E%3C/svg%3E">
+
+  <!-- Bootstrap 5.3.3 CSS (CDN) -->
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+        crossorigin="anonymous">
+
+  <!-- Bootstrap Icons 1.11.3 (CDN) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="visually-hidden-focusable skip-link" href="#main">Skip to main content</a>
+
+  <!-- ============================================================
+       NAVBAR
+       Links use plain hash fragments (#/route). The router in
+       js/router.js listens for hashchange and swaps the visible view.
+       ============================================================ -->
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top custom-navbar" aria-label="Main navigation">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="#/" data-route-link>
+          <span class="brand-mark" aria-hidden="true">&lt;/&gt;</span> Task 4
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu"
+                aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation menu">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navMenu">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0" id="navList">
+            <li class="nav-item"><a class="nav-link" href="#/" data-route-link data-route="/">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="#/register" data-route-link data-route="/register">Register</a></li>
+            <li class="nav-item"><a class="nav-link" href="#/users" data-route-link data-route="/users">Users
+              <span class="badge rounded-pill text-bg-light text-dark ms-1" id="navUserCount">0</span>
+            </a></li>
+            <li class="nav-item"><a class="nav-link" href="#/about" data-route-link data-route="/about">About</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Thin progress bar shown briefly during a route change -->
+  <div class="route-progress" id="routeProgress" aria-hidden="true"></div>
+
+  <main id="main" tabindex="-1">
+
+    <!-- ============================================================
+         HOME VIEW
+         ============================================================ -->
+    <section id="view-home" class="app-view" data-view="/">
+      <div class="hero">
+        <div class="container hero-content text-center">
+          <p class="hero-greeting">Task 4</p>
+          <h1 class="hero-title">Complex Form Validation &amp; <span class="text-gradient">Dynamic DOM Manipulation</span></h1>
+          <p class="hero-text mx-auto">
+            A small client-side application: a registration form with live, rule-by-rule validation and a
+            password strength meter, a dynamic user dashboard that updates the page without reloading it, and
+            hash-based client-side routing between the two.
+          </p>
+          <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+            <a href="#/register" data-route-link class="btn btn-gradient btn-lg px-4">
+              <i class="bi bi-person-plus me-2" aria-hidden="true"></i>Try the Registration Form
+            </a>
+            <a href="#/users" data-route-link class="btn btn-outline-light btn-lg px-4 btn-lift">
+              <i class="bi bi-people me-2" aria-hidden="true"></i>Open the Dashboard
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="container">
+          <h2 class="section-title">What This Task Demonstrates</h2>
+          <p class="section-subtitle">Three requirements from the brief, each with a working example</p>
+
+          <div class="row g-4">
+            <div class="col-12 col-md-4">
+              <article class="card card-lift feature-card h-100 text-center">
+                <div class="card-body p-4">
+                  <span class="icon-circle icon-circle-lg mb-3"><i class="bi bi-shield-lock" aria-hidden="true"></i></span>
+                  <h3 class="h5">Complex Validation</h3>
+                  <p class="text-muted-custom mb-0">A live password strength meter, a username availability check, and rule-by-rule feedback that updates as you type.</p>
+                </div>
+              </article>
+            </div>
+            <div class="col-12 col-md-4">
+              <article class="card card-lift feature-card h-100 text-center">
+                <div class="card-body p-4">
+                  <span class="icon-circle icon-circle-lg mb-3"><i class="bi bi-magic" aria-hidden="true"></i></span>
+                  <h3 class="h5">Dynamic DOM Updates</h3>
+                  <p class="text-muted-custom mb-0">The Users dashboard adds, edits, deletes, searches and sorts rows entirely with JavaScript, with no page reload.</p>
+                </div>
+              </article>
+            </div>
+            <div class="col-12 col-md-4">
+              <article class="card card-lift feature-card h-100 text-center">
+                <div class="card-body p-4">
+                  <span class="icon-circle icon-circle-lg mb-3"><i class="bi bi-signpost-split" aria-hidden="true"></i></span>
+                  <h3 class="h5">Client-Side Routing</h3>
+                  <p class="text-muted-custom mb-0">Home, Register, Users and About are separate views swapped by a small hash router. Back/forward and reload all work correctly.</p>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         REGISTER VIEW
+         ============================================================ -->
+    <section id="view-register" class="app-view" data-view="/register">
+      <div class="section view-section">
+        <div class="container">
+          <h1 class="section-title">Create an Account</h1>
+          <p class="section-subtitle">All validation below runs live, in the browser, as you type. Nothing is sent to a server; a valid submission is added to the Users dashboard and saved in this browser only (<code>localStorage</code>).</p>
+
+          <div class="row justify-content-center">
+            <div class="col-12 col-lg-8">
+              <div class="card contact-card">
+                <div class="card-body p-4 p-md-5">
+
+                  <div id="registerSuccess" class="alert alert-success d-none" role="status">
+                    <i class="bi bi-check-circle-fill me-2" aria-hidden="true"></i>
+                    <span id="registerSuccessText"></span>
+                  </div>
+
+                  <form id="registerForm" novalidate>
+                    <div class="row g-3">
+
+                      <div class="col-12 col-md-6">
+                        <label for="reg-name" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="reg-name" name="name" placeholder="e.g. Jayratna Shivasharan" autocomplete="name" required>
+                        <div class="invalid-feedback" data-for="name">Please enter at least 3 characters.</div>
+                      </div>
+
+                      <div class="col-12 col-md-6">
+                        <label for="reg-username" class="form-label">Username</label>
+                        <div class="input-group">
+                          <span class="input-group-text">@</span>
+                          <input type="text" class="form-control" id="reg-username" name="username" placeholder="e.g. jayratna23" autocomplete="username" required>
+                        </div>
+                        <!-- This message is created / updated dynamically by JavaScript (availability check) -->
+                        <div class="form-text" id="usernameStatus" aria-live="polite"></div>
+                        <div class="invalid-feedback" data-for="username">3-16 characters: letters, numbers and underscore only.</div>
+                      </div>
+
+                      <div class="col-12 col-md-6">
+                        <label for="reg-email" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="reg-email" name="email" placeholder="you@example.com" autocomplete="email" required>
+                        <div class="invalid-feedback" data-for="email">Please enter a valid email address.</div>
+                      </div>
+
+                      <div class="col-12 col-md-6">
+                        <label for="reg-phone" class="form-label">Phone Number</label>
+                        <!-- Formatted live by JavaScript as the user types: dynamic DOM value updates -->
+                        <input type="tel" class="form-control" id="reg-phone" name="phone" placeholder="98765 43210" inputmode="numeric" autocomplete="tel" required>
+                        <div class="invalid-feedback" data-for="phone">Please enter a 10-digit phone number.</div>
+                      </div>
+
+                      <div class="col-12">
+                        <label for="reg-password" class="form-label">Password</label>
+                        <div class="input-group">
+                          <input type="password" class="form-control" id="reg-password" name="password" placeholder="Create a strong password" autocomplete="new-password" required>
+                          <button class="btn btn-outline-secondary" type="button" id="togglePassword" aria-label="Show password" aria-pressed="false">
+                            <i class="bi bi-eye" aria-hidden="true"></i>
+                          </button>
+                        </div>
+
+                        <!-- Strength meter: 4 segments filled in dynamically by JavaScript -->
+                        <div class="strength-meter mt-2" role="img" aria-label="Password strength meter">
+                          <span class="strength-seg" data-seg="0"></span>
+                          <span class="strength-seg" data-seg="1"></span>
+                          <span class="strength-seg" data-seg="2"></span>
+                          <span class="strength-seg" data-seg="3"></span>
+                        </div>
+                        <p class="mb-2 mt-1"><strong>Strength: </strong><span id="strengthLabel">Enter a password</span></p>
+
+                        <!-- Rule checklist: each icon toggles between "unmet" and "met" as the user types -->
+                        <ul class="password-rules list-unstyled mb-0" id="passwordRules">
+                          <li data-rule="length"><i class="bi bi-circle" aria-hidden="true"></i> At least 8 characters</li>
+                          <li data-rule="upper"><i class="bi bi-circle" aria-hidden="true"></i> One uppercase letter</li>
+                          <li data-rule="lower"><i class="bi bi-circle" aria-hidden="true"></i> One lowercase letter</li>
+                          <li data-rule="number"><i class="bi bi-circle" aria-hidden="true"></i> One number</li>
+                          <li data-rule="special"><i class="bi bi-circle" aria-hidden="true"></i> One special character (!@#$...)</li>
+                        </ul>
+                        <div class="invalid-feedback" data-for="password">Your password must meet all of the rules above.</div>
+                      </div>
+
+                      <div class="col-12">
+                        <label for="reg-confirm" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="reg-confirm" name="confirm" placeholder="Re-enter your password" autocomplete="new-password" required>
+                        <div class="form-text" id="confirmStatus" aria-live="polite"></div>
+                        <div class="invalid-feedback" data-for="confirm">Passwords do not match.</div>
+                      </div>
+
+                      <div class="col-12">
+                        <label for="reg-bio" class="form-label">Short Bio <span class="text-muted-custom fw-normal">(optional)</span></label>
+                        <textarea class="form-control" id="reg-bio" name="bio" rows="3" maxlength="140" placeholder="One line about yourself"></textarea>
+                        <!-- Updated on every keystroke: dynamic DOM manipulation -->
+                        <div class="form-text text-end" id="bioCounter">0 / 140 characters</div>
+                      </div>
+
+                      <div class="col-12">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="reg-terms" name="terms" required>
+                          <label class="form-check-label" for="reg-terms">I agree to the Terms and Conditions</label>
+                          <div class="invalid-feedback" data-for="terms">You must accept the Terms and Conditions.</div>
+                        </div>
+                      </div>
+
+                      <div class="col-12 d-grid gap-2 d-sm-flex">
+                        <button type="submit" class="btn btn-gradient px-4">
+                          <i class="bi bi-person-check me-2" aria-hidden="true"></i>Create Account
+                        </button>
+                        <button type="reset" class="btn btn-outline-secondary px-4 btn-lift" id="registerReset">Reset</button>
+                      </div>
+                    </div>
+                  </form>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         USERS VIEW (dynamic DOM manipulation dashboard)
+         ============================================================ -->
+    <section id="view-users" class="app-view" data-view="/users">
+      <div class="section view-section section-alt">
+        <div class="container">
+          <h1 class="section-title">Users Dashboard</h1>
+          <p class="section-subtitle">Every row below is built and updated by JavaScript. Try searching, sorting, editing a bio inline, or deleting a user &mdash; the page never reloads.</p>
+
+          <div class="row g-3 align-items-end mb-4 dashboard-toolbar">
+            <div class="col-12 col-md-5">
+              <label for="userSearch" class="form-label">Search</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-search" aria-hidden="true"></i></span>
+                <input type="search" class="form-control" id="userSearch" placeholder="Search by name, username or email">
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <label for="userSort" class="form-label">Sort by</label>
+              <select class="form-select" id="userSort">
+                <option value="newest">Newest first</option>
+                <option value="oldest">Oldest first</option>
+                <option value="name-asc">Name (A-Z)</option>
+                <option value="name-desc">Name (Z-A)</option>
+              </select>
+            </div>
+            <div class="col-6 col-md-2">
+              <span class="badge rounded-pill text-bg-primary w-100 py-2" id="visibleCountBadge">0 shown</span>
+            </div>
+            <div class="col-12 col-md-2">
+              <button type="button" class="btn btn-outline-danger w-100" id="clearUsersBtn">
+                <i class="bi bi-trash3 me-1" aria-hidden="true"></i>Clear All
+              </button>
+            </div>
+          </div>
+
+          <!-- Rows are injected here by js/app.js -->
+          <div id="usersGrid" class="row g-4" aria-live="polite"></div>
+
+          <!-- Shown by JavaScript when there are no users, or a search matches nothing -->
+          <div id="usersEmpty" class="empty-state text-center d-none">
+            <i class="bi bi-inboxes empty-icon" aria-hidden="true"></i>
+            <p class="mb-3" id="usersEmptyText">No registrations found.</p>
+            <a href="#/register" data-route-link class="btn btn-gradient">
+              <i class="bi bi-person-plus me-2" aria-hidden="true"></i>Register the First User
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         ABOUT VIEW
+         ============================================================ -->
+    <section id="view-about" class="app-view" data-view="/about">
+      <div class="section view-section">
+        <div class="container">
+          <h1 class="section-title">About This Project</h1>
+          <p class="section-subtitle">Task 4 &ndash; Complex Form Validation and Dynamic DOM Manipulation</p>
+
+          <div class="row justify-content-center">
+            <div class="col-12 col-lg-8 about-copy">
+              <p>
+                This project builds on Tasks 1 to 3 of the Full Stack Development Internship. It focuses on three
+                things: checking form input thoroughly as the user types, updating the page dynamically without a
+                reload, and moving between views with client-side routing instead of separate HTML files.
+              </p>
+
+              <h2 class="h4 mt-4">Complex Form Validation</h2>
+              <p>
+                The registration form checks each field as the user types, not only on submit. The password field
+                has five separate rules (length, uppercase, lowercase, number, special character) and a four-segment
+                strength meter that reacts to how many rules currently pass. The username field is checked against
+                the users already saved in this browser, so a duplicate name is caught before submitting.
+              </p>
+
+              <h2 class="h4 mt-4">Dynamic DOM Manipulation</h2>
+              <p>
+                The Users dashboard keeps its data in a plain JavaScript array and re-renders only the rows that
+                changed. Typing in the search box, changing the sort order, editing a bio, or deleting a user all
+                update the page instantly through <code>createElement</code>, <code>textContent</code> and
+                class changes &mdash; there is no server involved.
+              </p>
+
+              <h2 class="h4 mt-4">Client-Side Routing</h2>
+              <p>
+                Home, Register, Users and About are four sections in one <code>index.html</code>. A small router in
+                <code>js/router.js</code> reads <code>location.hash</code>, shows the matching section, hides the
+                rest, and updates the active link in the navbar. The browser's Back and Forward buttons, and
+                reloading the page on any route, all work correctly because the route lives in the URL.
+              </p>
+
+              <h2 class="h4 mt-4">Storage Note</h2>
+              <p class="mb-0">
+                This task has no backend, so registered users are kept in this browser's <code>localStorage</code>
+                only. They are not sent anywhere, and clearing your browser data or using a different browser or
+                device will not show the same list.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="row gy-3 align-items-center">
+        <div class="col-12 col-md-6 text-center text-md-start">
+          <span class="brand-mark" aria-hidden="true">&lt;/&gt;</span>
+          <span class="fw-semibold">Task 4 - Complex Form Validation &amp; Dynamic DOM Manipulation</span>
+        </div>
+        <div class="col-12 col-md-6">
+          <nav aria-label="Footer navigation">
+            <ul class="list-unstyled d-flex flex-wrap justify-content-center justify-content-md-end gap-3 mb-0">
+              <li><a class="footer-link" href="#/" data-route-link>Home</a></li>
+              <li><a class="footer-link" href="#/register" data-route-link>Register</a></li>
+              <li><a class="footer-link" href="#/users" data-route-link>Users</a></li>
+              <li><a class="footer-link" href="#/about" data-route-link>About</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <hr class="footer-divider">
+      <p class="text-center footer-muted small mb-0">&copy; <span id="year">2026</span> Full Stack Development Internship Project.</p>
+    </div>
+  </footer>
+
+  <!-- Toast used for delete/clear confirmations -->
+  <div class="toast-container position-fixed bottom-0 start-0 p-3">
+    <div id="appToast" class="toast" role="status" aria-live="polite" aria-atomic="true">
+      <div class="toast-header">
+        <i class="bi bi-info-circle-fill text-primary me-2" aria-hidden="true"></i>
+        <strong class="me-auto">Notice</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body" id="appToastBody"></div>
+    </div>
+  </div>
+
+  <!-- Confirm-delete modal -->
+  <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title h5" id="confirmModalTitle">Please confirm</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="confirmModalBody">Are you sure?</div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger" id="confirmModalAction">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5.3.3 JS bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+          crossorigin="anonymous"></script>
+
+  <script src="js/router.js"></script>
+  <script src="js/validation.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
